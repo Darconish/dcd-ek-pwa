@@ -1,4 +1,4 @@
-const C='dcd-ek-safe-v10';
+const C='dcd-ek-safe-v11';
 const A=['./','index.html','manifest.webmanifest','icon.svg'];
 
 self.addEventListener('install',e=>{
