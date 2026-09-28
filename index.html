@@ -143,7 +143,7 @@ async function loginWithPassword(p){
   const t=await rpc('ek_login',{p_password:p});token=String(t||'').replace(/^"|"$/g,'');localStorage.setItem(TOKEN_KEY,token);await loadContacts();showApp();await maybeMigrateLocal();
 }
 $('#loginBtn').onclick=async()=>{const p=$('#loginPassword').value;$('#authMsg').textContent='Entrando…';try{await loginWithPassword(p);$('#loginPassword').value=''}catch(e){$('#authMsg').textContent='No pude entrar: '+e.message}};
-$('#setupBtn').onclick=async()=>{const a=$('#setupPassword').value,b=$('#setupPassword2').value;if(a.length<8){$('#authMsg').textContent='Usa al menos 8 caracteres.';return}if(a!==b){$('#authMsg').textContent='Las contraseñas no coinciden.';return}$('#authMsg').textContent='Creando contraseña…';try{await rpc('ek_initialize_password',{p_new:a});await loginWithPassword(a);$('#setupPassword').value=$('#setupPassword2').value=''}catch(e){$('#authMsg').textContent='No pude crearla: '+e.message}};
+$('#setupBtn').onclick=async()=>{const a=$('#setupPassword').value,b=$('#setupPassword2').value;if(a.length<8){$('#authMsg').textContent='Usa al menos 8 caracteres.';return}if(a!==b){$('#authMsg').textContent='Las contraseñas no coinciden.';return}$('#authMsg').textContent='Creando contraseña…';try{const code=$('#setupCode').value.trim();if(!code){$('#authMsg').textContent='Escribe el código de configuración.';return}await rpc('ek_initialize_password',{p_setup_code:code,p_new:a});await loginWithPassword(a);$('#setupCode').value=$('#setupPassword').value=$('#setupPassword2').value=''}catch(e){$('#authMsg').textContent='No pude crearla: '+e.message}};
 $('#loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter')$('#loginBtn').click()});
 
 async function loadContacts(){
